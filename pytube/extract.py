@@ -131,6 +131,18 @@ def _video_info_url(params: OrderedDict) -> str:
     return "https://youtube.com/get_video_info?" + urlencode(params)
 
 
+# def js_url(html: str) -> str:
+#     """Get the base JavaScript url.
+
+#     Construct the base JavaScript url, which contains the decipher
+#     "transforms".
+
+#     :param str html:
+#         The html contents of the watch page.
+#     """
+#     base_js = get_ytplayer_config(html)["assets"]["js"]
+#     return "https://youtube.com" + base_js
+
 def js_url(html: str) -> str:
     """Get the base JavaScript url.
 
@@ -140,7 +152,9 @@ def js_url(html: str) -> str:
     :param str html:
         The html contents of the watch page.
     """
-    base_js = get_ytplayer_config(html)["assets"]["js"]
+    start = html.find('src="/s/player/') + 5
+    stop = html[start:].find('base.js') + 7
+    base_js = html[start:start + stop]
     return "https://youtube.com" + base_js
 
 
@@ -276,7 +290,7 @@ def apply_descrambler(stream_data: Dict, key: str) -> None:
     otf_type = "FORMAT_STREAM_TYPE_OTF"
 
     if key == "url_encoded_fmt_stream_map" and not stream_data.get(
-        "url_encoded_fmt_stream_map"
+            "url_encoded_fmt_stream_map"
     ):
         formats = json.loads(stream_data["player_response"])["streamingData"]["formats"]
         formats.extend(
