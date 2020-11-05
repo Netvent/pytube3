@@ -203,7 +203,9 @@ def get_ytplayer_config(html: str) -> Any:
         r";ytplayer\.config\s*=\s*({.+?});ytplayer",
         r";yt\.setConfig\(\{'PLAYER_CONFIG':\s*({.*})}\);",
         r";yt\.setConfig\(\{'PLAYER_CONFIG':\s*({.*})(,'EXPERIMENT_FLAGS'|;)",  # noqa: E501
+        r"'{PLAYER_CONFIG':\s*({.*})});"
     ]
+
     logger.debug("finding initial function name")
     for pattern in config_patterns:
         regex = re.compile(pattern)
